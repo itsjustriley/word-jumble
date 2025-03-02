@@ -34,13 +34,22 @@ def get_file_lines(filename='/usr/share/dict/words'):
         lines = [line.strip().upper() for line in file]
     return lines
 
-
 # HINT: You may want to sort scrambled letters, so here is a helper function
 def sorted_letters(scrambled_letters):
     """Return a string with all the same letters as the given scrambled string
     but with letters sorted in lexicographical (English dictionary) order."""
     # Sort given letters and concatenate them together with no space between
     return ''.join(sorted(scrambled_letters))
+
+def sorted_dictionary(words_list):
+    sorted_dict = {}
+    for word in words_list:
+        sorted_word = sorted_letters(word)
+        if sorted_word in sorted_dict:
+            sorted_dict[sorted_word].append(word)
+        else:
+            sorted_dict[sorted_word] = [word]
+    return sorted_dict
 
 
 def solve_one_jumble(letters):
@@ -53,12 +62,15 @@ def solve_one_jumble(letters):
     # Create a list to store all valid words the final letters unscramble to
     # Returned data should be a list of strings (words)
     # Example: solve_one_jumble('ILST') --> ['LIST', 'SILT', 'SLIT']
-    valid_words = []
 
     # TODO: Unscramble the given letters into all valid words (or at least one)
     # ========> YOUR CODE HERE <========
-
-    return valid_words
+    target_letters = sorted_letters(letters)
+    for sorted_dictionary_key in sorted_dict:
+        if len(sorted_dictionary_key) == len(target_letters):
+            if sorted_dictionary_key == target_letters:
+                return sorted_dict[sorted_dictionary_key]
+    return []
 
 
 def solve_final_jumble(letters, final_circles):
@@ -213,6 +225,8 @@ if __name__ == '__main__':
     # HINT: You may want to store the words list in a different data structure
     # that could help you look up candidate words faster than searching a list
     # ========> YOUR CODE HERE <========
+
+    sorted_dict = sorted_dictionary(words_list)
 
     # Test solving several word jumble example inputs
     # You can comment out these lines to test fewer example inputs at a time
